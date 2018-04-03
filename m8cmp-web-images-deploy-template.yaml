@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    description: |-
+      m8cmp-web是M8Cloud极量云租户网站，此模板通过镜像来部署m8cmp-web
+  name: m8cmp-web-images-deploy-template
+  namespace: openshift
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: m8cmp-web
+    name: m8cmp-web
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: m8cmp-web
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: m8cmp-web
+          deploymentconfig: m8cmp-web
+      spec:
+        containers:
+        - env:
+          - name: DEV_MODE
+            value: "false"
+          - name: NPM_RUN
+            value: express:run
+          - name: NPM_RUN_DEV
+            value: dev
+          image: ${M8CMP_WEB_IMAGES_REGISTRY_URL}
+          imagePullPolicy: Always
+          name: m8cmp-web
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 512m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/app-root/src/dist/static/config
+            name: m8cmp-web-config
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          region: infra
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: m8cmp-web-config
+          name: m8cmp-web-config
+    test: false
+    triggers:
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: m8cmp-web
+    name: m8cmp-web
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: m8cmp-web
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: m8cmp-web
+    name: m8cmp-web
+  spec:
+    host: console.${SUBDOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: m8cmp-web
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: v1
+  data:
+    api-iaas.js: ""
+    api-paas.js: "var remoteHost = 'http://m8paas-apiserver.${SUBDOMAIN}/';\r\nvar socketUrl
+      = 'ws://m8paas-apiserver.${SUBDOMAIN}/';\r\n//var remoteHost = 'http://172.18.1.226:8000/';\r\n//var
+      socketUrl = 'ws://172.18.1.226:8000/';\r\n\r\nvar httpConfig = {\r\n  remoteHost:remoteHost,\r\n
+      \ //图表数据地址\r\n  hakular:remoteHost,\r\n  //  监控预警\r\n  hakularExtend:remoteHost+'hawkular/extend/',\r\n
+      \ //webhook\r\n  hakularWebHook:remoteHost+'hawkular/extend/',\r\n  //es地址\r\n
+      \ esUrl:remoteHost+'m8es/m8-haproxy/_search',\r\n  applicationUrl:remoteHost+'m8es/project.*/_search?format=json',\r\n
+      \ operationUrl:remoteHost+'m8es/m8-audit/_search?format=json',\r\n
+      \ //api集市地址\r\n  apiStore:'http://172.18.0.22:8080/',\r\n  //心跳图接口\r\n  healthChart:remoteHost+'m8healthcheck',\r\n
+      \ socketUrl: socketUrl,\r\n  project: remoteHost + 'oapi/v1/projects',\r\n  projectrequests:remoteHost+'m8projectrequests',\r\n//
+      \   公用\r\n  masterStorageClasses:remoteHost+'apis/storage.k8s.io/v1/storageclasses',\r\n
+      \ masterApi:remoteHost+'api/v1/',\r\n  masterNamespace:remoteHost+'oapi/v1/namespaces/',\r\n
+      \ masterNamespaceApi:remoteHost+'api/v1/namespaces/',\r\n  masterNamespaceOpenshift:remoteHost+'oapi/v1/namespaces/',\r\n
+      \ masterNamespaceApis:remoteHost+'apis/autoscaling/v1/namespaces/',\r\n\r\n//
+      \   应用发布\r\n  imagestreams:remoteHost+'oapi/v1/namespaces/openshift/imagestreams',
+      //openshift下镜像流\r\n  templates:remoteHost+'oapi/v1/namespaces/openshift/templates',
+      //openshift模板\r\n//   导入Yaml/JSON\r\n  importYaml:remoteHost+'console/styles/fonts/OpenSans-Bold-webfont.woff2',\r\n//部署应用\r\n//
+      \    deployList:remoteHost+'/api/v1/namespaces/test/replicationcontrollers',\r\n
+      \ deploy:remoteHost+'oapi/v1/deploymentconfigs',\r\n  deployList:remoteHost+'/oapi/v1/namespaces/lh/deploymentconfigs',\r\n
+      \ deploydetail:remoteHost+\"api/v1/namespaces/lh/replicationcontrollers?labelSelector=openshift.io%2Fdeployment-config.name%3D\",\r\n
+      \ eventurl:remoteHost+'api/v1/namespaces/lh/events',\r\n  deployListconfig:remoteHost+'/oapi/v1/namespaces/lh/deploymentconfigs/{name}/status',/*配置*/\r\n
+      \ deploydetail_detail:remoteHost+\"/api/v1/namespaces/lh/replicationcontrollers/\",\r\n
+      \ deployresource:remoteHost+\"/oapi/v1/namespaces/hello/builds\",\r\n  //  查询服务\r\n
+      \ services:remoteHost+\"api/v1/namespaces\" ,   //应用部署--服务\r\n  //连接websocket\r\n
+      \ websochet:socketUrl+\"oapi/v1/namespaces/\",\r\n  websocket:socketUrl+\"api/v1/namespaces/\",\r\n
+      \ websocet:socketUrl+\"apis\",\r\n  websocetConsole:socketUrl+\"oapi/v1/projects\",\r\n//
+      \   terminal\r\n  terminal:socketUrl+'api/v1/namespaces/',\r\n//    用户\r\n  getAlluser:remoteHost+'oapi/v1/users',\r\n
+      \ getAllgroup:remoteHost+'oapi/v1/groups',\r\n    getRolebindings:remoteHost+'oapi/v1/rolebindings',\r\n
+      \   getAllroles:remoteHost+'oapi/v1/roles',\r\n    getClusterroles:remoteHost+'oapi/v1/clusterroles',\r\n
+      \   getroles:remoteHost+'oapi/v1/roles',\r\n    clusterrolebindings:remoteHost+'oapi/v1/clusterrolebindings',\r\n
+      \ //  文件\r\n    filesSystem:remoteHost+'m8objectstorage/',\r\n    fileProgress:remoteHost+'m8objstorageProgress/',\r\n
+      \   fileMaxsize:remoteHost+'m8objectstorageMaxSizeMB',\r\n  //  apiGroup\r\n
+      \   apiGroup:remoteHost+'apis',\r\n\r\n\r\n  //    管理平台集群配额\r\n  quotas:remoteHost
+      + 'oapi/v1/clusterresourcequotas',\r\n  // 限制范围初始值\r\n  limitRange:{\r\n    cpuLimit
+      : '2',\r\n    cpuRequest : '100',\r\n    memoryLimit : '4',\r\n    memoryRequest
+      : '256',\r\n    name: \"\",\r\n    displayName: \"\",\r\n    description: \"\",\r\n
+      \   options:[\r\n      {\r\n        label:'cores',value:'cores'\r\n      },\r\n
+      \     {\r\n        label:'millicores',value:'m'\r\n      }\r\n    ],\r\n    optionM:[\r\n
+      \     {\r\n        label:'GiB',value:'Gi'\r\n      },\r\n      {\r\n        label:'MiB',value:'Mi'\r\n
+      \     }\r\n    ],\r\n    cpuLimitModel: 'cores',\r\n    cpuRequestModel: 'm',\r\n
+      \   memoryLimitModel: 'Gi',\r\n    memoryRequestModel: 'Mi',\r\n  },\r\n  //用户等级\r\n
+      \ userLevels:{\r\n    userLevel:[\r\n      {\r\n        label:'不可创建项目  ',value:'m8UserLevel-0'\r\n
+      \     },\r\n      {\r\n        label:'最多可创建1个项目',value:'m8UserLevel-1'\r\n      },\r\n
+      \     {\r\n        label:'最多可创建5个项目',value:'m8UserLevel-5'\r\n      },\r\n      {\r\n
+      \       label:'最多可创建10个项目',value:'m8UserLevel-10'\r\n      },\r\n      {\r\n        label:'最多可创建20个项目',value:'m8UserLevel-20'\r\n
+      \     }\r\n      ]\r\n  }\r\n\r\n}"
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: m8cmp-web
+    name: m8cmp-web-config
+parameters:
+- description: "m8cmp-web 镜像仓库地址"
+  displayName: m8cmp-web images registry url
+  name: M8CMP_WEB_IMAGES_REGISTRY_URL
+  required: true
+  value: dockerhub.csg.com:5000/m8cloud/m8cmp-web:latest
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com

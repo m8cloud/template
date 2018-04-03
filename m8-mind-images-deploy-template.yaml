@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    description: |-
+      m8-mind是M8Cloud极量云在线协同办公平台，此模板通过镜像来部署m8-mind
+  name: m8-mind-images-deploy-template
+  namespace: openshift
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: mind
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: mind
+          deploymentconfig: mind
+      spec:
+        containers:
+        - imagePullPolicy: Always
+          image: ${M8_MIND_REGISTRY_URL}
+          name: mind
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 512m
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      deploymentconfig: mind
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    host: mind.${SUBDOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: mind
+      weight: 100
+    wildcardPolicy: None
+parameters:
+- description: "m8-mind镜像仓库地址"
+  displayName: m8-mind images registry url
+  name: M8_MIND_REGISTRY_URL
+  required: true
+  value: dockerhub.csg.com:5000/m8cloud/m8-mind:latest
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com

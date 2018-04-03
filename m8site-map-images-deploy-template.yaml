@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    description: |-
+      m8site-map是中通服软件科技有限公司网站导航地图，此模板通过镜像来来部署m8site-map
+  name: m8site-map-sourcecode-build-template
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: site-map
+    name: site-map
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: site-map
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: site-map
+          deploymentconfig: site-map
+      spec:
+        containers:
+        - imagePullPolicy: Always
+          image: ${M8SITE_MAP_IMAGES_REGISTRY_URL}
+          name: site-map
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - site-map
+        from:
+          kind: ImageStreamTag
+          name: site-map:latest
+          namespace: m8default
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: site-map
+    name: site-map
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: site-map
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: site-map
+    name: site-map
+  spec:
+    host: site-map.${SUBDOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: site-map
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: site-map
+    name: site-map
+  spec:
+    lookupPolicy:
+      local: false
+parameters:
+- description: "m8cmp-web镜像仓库地址"
+  displayName: m8site-map images registry url
+  name: M8SITE_MAP_IMAGES_REGISTRY_URL
+  required: true
+  value: dockerhub.csg.com:5000/m8cloud/m8site-map:latest
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com

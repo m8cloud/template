@@ -1,0 +1,205 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    description: |-
+      openldap和phpldapadmin是M8Cloud极量云安全认证模块，此模板通过镜像来部署openldap和phpldapadmin
+  name: openldap-phpldapadmin-images-deploy-template
+  namespace: openshift
+# 下面是openldap template 信息
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: openldap
+    name: openldap
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: openldap
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: openldap
+          deploymentconfig: openldap
+      spec:
+        containers:
+        - env:
+          - name: OPENLDAP_ROOT_PASSWORD
+            value: "123456"
+          - name: OPENLDAP_ROOT_DN_SUFFIX
+            value: dc=m8cloud,dc=ccssoft,dc=com
+          image: ${OPENLDAP_IMAGES_REGISTRY_URL}
+          imagePullPolicy: Always
+          name: openldap
+          ports:
+          - containerPort: 389
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 512m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/ldap
+            name: openldaphostpathstorage
+          - mountPath: /etc/openldap
+            name: openldaphostpathconfig
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          kubernetes.io/hostname: ${OPENLDAP_NODE_SELECTOR}
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /var/lib/openldap
+          name: openldaphostpathstorage
+        - hostPath:
+            path: /var/lib/openldapconfig
+          name: openldaphostpathconfig
+    test: false
+    triggers:
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: openldap
+    name: openldap
+  spec:
+    ports:
+    - name: 389-tcp
+      nodePort: 30000
+      port: 389
+      protocol: TCP
+      targetPort: 389
+    selector:
+      deploymentconfig: openldap
+    sessionAffinity: None
+    type: NodePort
+# 下面是phpldapadmin template 信息
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: phpldapadmin
+    name: phpldapadmin
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: phpldapadmin
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: phpldapadmin
+          deploymentconfig: phpldapadmin
+      spec:
+        containers:
+        - env:
+          - name: LDAP_LOG_LEVEL
+            value: "256"
+          - name: LDAP_ORGANISATION
+            value: Example Inc.
+          - name: LDAP_DOMAIN
+            value: example.org
+          - name: LDAP_ADMIN_PASSWORD
+            value: admin
+          - name: LDAP_CONFIG_PASSWORD
+            value: config
+          - name: LDAP_READONLY_USER
+            value: "false"
+          - name: LDAP_READONLY_USER_USERNAME
+            value: readonly
+          - name: LDAP_READONLY_USER_PASSWORD
+            value: readonly
+          image: ${PHPLDAPADMIN_IMAGES_REGISTRY_URL}
+          imagePullPolicy: Always
+          name: phpldapadmin
+          ports:
+          - containerPort: 389
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: phpldapadmin
+    name: phpldapadmin
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: phpldapadmin
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: phpldapadmin
+  spec:
+    host: ${SUBDOMAIN}
+    to:
+      kind: Service
+      name: phpldapadmin
+      weight: 100
+    wildcardPolicy: None
+parameters:
+- description: "指定openldap部署在哪一个节点"
+  displayName: OpenLDAP deploy node
+  name: OPENLDAP_NODE_SELECTOR
+  required: true
+  value: 172.17.10.227
+- description: "openldap镜像仓库地址"
+  displayName: openldap images registry url
+  name: OPENLDAP_IMAGES_REGISTRY_URL
+  required: true
+  value: dockerhub.csg.com:5000/m8cloud/openldap:latest
+- description: "phpldapadmin镜像仓库地址"
+  displayName: phpldapadmin images registry url
+  name: PHPLDAPADMIN_IMAGES_REGISTRY_URL
+  required: true
+  value: dockerhub.csg.com:5000/m8cloud/phpldapadmin:latest
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com

@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    description: |-
+      m8-mind是M8Cloud极量云在线协同办公平台，此模板通过源代码构建来部署m8-mind
+  name: m8-mind-sourcecode-build-template
+  namespace: openshift
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    labels:
+      app: mind
+    name: mind-git-secret
+  data:
+    username: d2FuZ3BlbmdjaGVuZw==
+    password: d2Y5MjkxMThmeQ==
+  type: kubernetes.io/basic-auth
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    nodeSelector:
+      region: infra
+    output:
+      to:
+        kind: ImageStreamTag
+        name: mind:latest
+    source:
+      git:
+        ref: master
+        uri: ${SOURCE_REPOSITORY_URL}
+      sourceSecret:
+        name: mind-git-secret
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: PACKAGE_COMMAND
+          value: cnpm install express
+        from:
+          kind: ImageStreamTag
+          name: nodejs8-cnpm:latest
+          namespace: openshift
+      type: Source
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: mind
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: mind
+          deploymentconfig: mind
+      spec:
+        containers:
+        - imagePullPolicy: Always
+          name: mind
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 512m
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - mind
+        from:
+          kind: ImageStreamTag
+          name: mind:latest
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      deploymentconfig: mind
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: mind
+    name: mind
+  spec:
+    host: mind.${SUBDOMAIN}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: mind
+      weight: 100
+    wildcardPolicy: None
+parameters:
+- description: "m8-mind源代码仓库地址"
+  displayName: Git Repository URL
+  name: SOURCE_REPOSITORY_URL
+  required: true
+  value: http://172.17.10.187/km/working-platform.git
+- description: "可拉取m8-mind仓库地址权限的账号"
+  displayName: Git Username
+  name: USERNAME
+  required: true
+  value: wangpengcheng
+- description: "可拉取m8-mind仓库地址权限的密码"
+  displayName: Git Password
+  name: PASSWORD
+  required: true
+  value: wf929118fy
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com

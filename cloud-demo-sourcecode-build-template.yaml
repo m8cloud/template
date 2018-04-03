@@ -1,0 +1,2343 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: cloud-demo-sourcecode-build-template
+  namespace: openshift
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 文明网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: civilizationweb
+    name: civilizationweb
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: civilizationweb
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: civilizationweb
+          deploymentconfig: civilizationweb
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/civilizationweb@sha256:658f412ad079d67654f29571527eee51419f9b4518b02f405262f565d6d00629
+          imagePullPolicy: Always
+          name: civilizationweb
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - civilizationweb
+        from:
+          kind: ImageStreamTag
+          name: civilizationweb:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 凝聚网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: coacervationweb
+    name: coacervationweb
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: coacervationweb
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: coacervationweb
+          deploymentconfig: coacervationweb
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/coacervationweb@sha256:1058f325c3560c15b5286a84ae4c965d26bf5bf1bea5982159bbe2bd6a54cea4
+          imagePullPolicy: Always
+          name: coacervationweb
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - coacervationweb
+        from:
+          kind: ImageStreamTag
+          name: coacervationweb:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 电梯安全风险监管系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: elevatorsf
+    name: elevatorsf
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: elevatorsf
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: elevatorsf
+          deploymentconfig: elevatorsf
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/elevatorsf@sha256:6df59b366ed4c27615a5c8795e9e58a83a03fc89a5ac085981d2fd9081ff6449
+          imagePullPolicy: Always
+          name: elevatorsf
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - elevatorsf
+        from:
+          kind: ImageStreamTag
+          name: elevatorsf:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 档案管理系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: filemanagement
+    name: filemanagement
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: filemanagement
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: filemanagement
+          deploymentconfig: filemanagement
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/filemanagement@sha256:2d9f7efe7cd1731c26a39096135d667b3315715ce712fad2e3da16d661bcf33c
+          imagePullPolicy: Always
+          name: filemanagement
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - filemanagement
+        from:
+          kind: ImageStreamTag
+          name: filemanagement:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 财政局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: financeweb
+    name: financeweb
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: financeweb
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: financeweb
+          deploymentconfig: financeweb
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/financeweb@sha256:7607491bec1e47b25b5ca224011e9906ef579565e8bd774d0c95123dab8a0916
+          imagePullPolicy: Always
+          name: financeweb
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - financeweb
+        from:
+          kind: ImageStreamTag
+          name: financeweb:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 地理共享服务平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: geographyshare
+    name: geographyshare
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: geographyshare
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: geographyshare
+          deploymentconfig: geographyshare
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/geographyshare@sha256:8a2c6f19deb9011132eab5344a7acdf2bea6a6216610ee39f3c319bf4e072896
+          imagePullPolicy: Always
+          name: geographyshare
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - geographyshare
+        from:
+          kind: ImageStreamTag
+          name: geographyshare:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 政府采购网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: governmentpch
+    name: governmentpch
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: governmentpch
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: governmentpch
+          deploymentconfig: governmentpch
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/governmentpch@sha256:b027cd1b7a027726a548f9e2d6844450e875f2d17f3a2c7f7e05d7c13af962b4
+          imagePullPolicy: Always
+          name: governmentpch
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 600Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - governmentpch
+        from:
+          kind: ImageStreamTag
+          name: governmentpch:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 信息生活体验馆
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: infospace
+    name: infospace
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: infospace
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: infospace
+          deploymentconfig: infospace
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/infospace@sha256:14eb030d4fa0e077e6702ad7cfbf6330c336c9ad229e5e60de113bf8cb240d4a
+          imagePullPolicy: Always
+          name: infospace
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - infospace
+        from:
+          kind: ImageStreamTag
+          name: infospace:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上生活服务中心平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: lifecenter
+    name: lifecenter
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: lifecenter
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: lifecenter
+          deploymentconfig: lifecenter
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/lifecenter@sha256:6f55348453216ae0b4a07fd54a45e6f1d450e5ea177322c40bb36357bb05dbfd
+          imagePullPolicy: Always
+          name: lifecenter
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - lifecenter
+        from:
+          kind: ImageStreamTag
+          name: lifecenter:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上政务中心
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: onlinegovernmenthall
+    name: onlinegovernmenthall
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: onlinegovernmenthall
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: onlinegovernmenthall
+          deploymentconfig: onlinegovernmenthall
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/onlinegovernmenthall@sha256:4f6294edd766b4d0772a111e9e2f1ddafeaaffe98854e638bb0338d1ef8f3dad
+          imagePullPolicy: Always
+          name: onlinegovernmenthall
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - onlinegovernmenthall
+        from:
+          kind: ImageStreamTag
+          name: onlinegovernmenthall:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 平安建设信息网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: safetyconstrt
+    name: safetyconstrt
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: safetyconstrt
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: safetyconstrt
+          deploymentconfig: safetyconstrt
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/safetyconstrt@sha256:db16a65bcd6b26b38faaed1aad0f194ce7aec946d916123bd54917793837f7ed
+          imagePullPolicy: Always
+          name: safetyconstrt
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - safetyconstrt
+        from:
+          kind: ImageStreamTag
+          name: safetyconstrt:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 1
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      m8cloud/displayName: 市场监督管理局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: supervisionweb
+    name: supervisionweb
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: supervisionweb
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: supervisionweb
+          deploymentconfig: supervisionweb
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/cloud-demo/supervisionweb@sha256:73641e88b58eea3e6e40c6a14ea3f34c7a778ea397b4d5b440ed09f13e2c1aed
+          imagePullPolicy: Always
+          name: supervisionweb
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - supervisionweb
+        from:
+          kind: ImageStreamTag
+          name: supervisionweb:latest
+          namespace: cloud-demo
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 1
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 文明网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: civilizationweb
+    name: civilizationweb
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: civilizationweb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 凝聚网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: coacervationweb
+    name: coacervationweb
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: coacervationweb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 电梯安全风险监管系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: elevatorsf
+    name: elevatorsf
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: elevatorsf
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 档案管理系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: filemanagement
+    name: filemanagement
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: filemanagement
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 财政局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: financeweb
+    name: financeweb
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: financeweb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 地理共享服务平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: geographyshare
+    name: geographyshare
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: geographyshare
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 政府采购网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: governmentpch
+    name: governmentpch
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: governmentpch
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 信息生活体验馆
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: infospace
+    name: infospace
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: infospace
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上生活服务中心平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: lifecenter
+    name: lifecenter
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: lifecenter
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上政务中心
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: onlinegovernmenthall
+    name: onlinegovernmenthall
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: onlinegovernmenthall
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 平安建设信息网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: safetyconstrt
+    name: safetyconstrt
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: safetyconstrt
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      m8cloud/displayName: 市场监督管理局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: supervisionweb
+    name: supervisionweb
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: supervisionweb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 文明网
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: civilizationweb
+    name: civilizationweb
+  spec:
+    host: civilizationweb-cloud-demo.m8dev.com
+    path: /civilizationWeb
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: civilizationweb
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T07:43:13Z
+        status: "True"
+        type: Admitted
+      host: civilizationweb-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 凝聚网
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: coacervationweb
+    name: coacervationweb
+  spec:
+    host: coacervationweb-cloud-demo.m8dev.com
+    path: /coacervationWeb
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: coacervationweb
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T07:44:16Z
+        status: "True"
+        type: Admitted
+      host: coacervationweb-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 电梯安全风险监管系统
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: elevatorsf
+    name: elevatorsf
+  spec:
+    host: elevatorsf-cloud-demo.m8dev.com
+    path: /elevatorSf
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: elevatorsf
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T07:46:35Z
+        status: "True"
+        type: Admitted
+      host: elevatorsf-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 档案管理系统
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: filemanagement
+    name: filemanagement
+  spec:
+    host: filemanagement-cloud-demo.m8dev.com
+    path: /fileManagement
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: filemanagement
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T07:48:00Z
+        status: "True"
+        type: Admitted
+      host: filemanagement-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 财政局网站
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: financeweb
+    name: financeweb
+  spec:
+    host: financeweb-cloud-demo.m8dev.com
+    path: /financeWeb
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: financeweb
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T07:32:57Z
+        status: "True"
+        type: Admitted
+      host: financeweb-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 地理共享服务平台
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: geographyshare
+    name: geographyshare
+  spec:
+    host: geographyshare-cloud-demo.m8dev.com
+    path: /geographyShare
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: geographyshare
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T08:00:42Z
+        status: "True"
+        type: Admitted
+      host: geographyshare-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 政府采购网站
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: governmentpch
+    name: governmentpch
+  spec:
+    host: governmentpch-cloud-demo.m8dev.com
+    path: /governmentPch
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: governmentpch
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-19T03:40:23Z
+        status: "True"
+        type: Admitted
+      host: governmentpch-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 信息生活体验馆
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: infospace
+    name: infospace
+  spec:
+    host: infospace-cloud-demo.m8dev.com
+    path: /infospace
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: infospace
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-19T02:35:18Z
+        status: "True"
+        type: Admitted
+      host: infospace-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上生活服务中心平台
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: lifecenter
+    name: lifecenter
+  spec:
+    host: lifecenter-cloud-demo.m8dev.com
+    path: /lifeCenter
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: lifecenter
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T08:13:01Z
+        status: "True"
+        type: Admitted
+      host: lifecenter-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上政务中心
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: onlinegovernmenthall
+    name: onlinegovernmenthall
+  spec:
+    host: onlinegovernmenthall-cloud-demo.m8dev.com
+    path: /onlineGovernmentHall
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: onlinegovernmenthall
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T08:15:37Z
+        status: "True"
+        type: Admitted
+      host: onlinegovernmenthall-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 平安建设信息网站
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: safetyconstrt
+    name: safetyconstrt
+  spec:
+    host: safetyconstrt-cloud-demo.m8dev.com
+    path: /safetyConstrt
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: safetyconstrt
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T08:03:41Z
+        status: "True"
+        type: Admitted
+      host: safetyconstrt-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      m8cloud/displayName: 市场监督管理局网站
+      openshift.io/generated-by: m8cmp-web
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: supervisionweb
+    name: supervisionweb
+  spec:
+    host: supervisionweb-cloud-demo.m8dev.com
+    path: /supervisionWeb
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: supervisionweb
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-16T08:04:22Z
+        status: "True"
+        type: Admitted
+      host: supervisionweb-cloud-demo.m8dev.com
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 文明网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: civilizationweb
+    name: civilizationweb
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: civilizationweb:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/civilizationWeb
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521186192530
+      type: Generic
+    - github:
+        secret: web1521186192530
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 凝聚网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: coacervationweb
+    name: coacervationweb
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: coacervationweb:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/coacervationWeb
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - github:
+        secret: web1521186255527
+      type: GitHub
+    - generic:
+        secret: web1521186255527
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 电梯安全风险监管系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: elevatorsf
+    name: elevatorsf
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: elevatorsf:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/elevatorSf
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - github:
+        secret: web1521186394357
+      type: GitHub
+    - generic:
+        secret: web1521186394357
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 档案管理系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: filemanagement
+    name: filemanagement
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: filemanagement:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/fileManagement
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521186478807
+      type: Generic
+    - github:
+        secret: web1521186478807
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 财政局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: financeweb
+    name: financeweb
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: financeweb:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/financeWeb
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521185576451
+      type: Generic
+    - github:
+        secret: web1521185576451
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 地理共享服务平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: geographyshare
+    name: geographyshare
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: geographyshare:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/geographyShare
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521187240762
+      type: Generic
+    - github:
+        secret: web1521187240762
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 政府采购网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: governmentpch
+    name: governmentpch
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: governmentpch:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/governmentPch
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: java8-tomcat8:8
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521430822618
+      type: Generic
+    - github:
+        secret: web1521430822618
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 信息生活体验馆
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: infospace
+    name: infospace
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: infospace:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/infospace
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521426917294
+      type: Generic
+    - github:
+        secret: web1521426917294
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 网上生活服务中心平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: lifecenter
+    name: lifecenter
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: lifecenter:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/lifeCenter
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - github:
+        secret: web1521187980222
+      type: GitHub
+    - generic:
+        secret: web1521187980222
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 网上政务中心
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: onlinegovernmenthall
+    name: onlinegovernmenthall
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: onlinegovernmenthall:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/onlineGovernmentHall
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521188136356
+      type: Generic
+    - github:
+        secret: web1521188136356
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 平安建设信息网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: safetyconstrt
+    name: safetyconstrt
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: safetyconstrt:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/safetyConstrt
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - generic:
+        secret: web1521187419789
+      type: Generic
+    - github:
+        secret: web1521187419789
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      m8cloud/build-type: git-source-build
+      m8cloud/displayName: 市场监督管理局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    labels:
+      app: supervisionweb
+    name: supervisionweb
+  spec:
+    failedBuildsHistoryLimit: 3
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: supervisionweb:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: m8-demo-e-government/supervisionWeb
+      git:
+        ref: master
+        uri: http://172.17.10.187/cmp/m8-demo-e-government.git
+      sourceSecret:
+        name: wfqgit
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: wildfly:10.1
+          namespace: openshift
+      type: Source
+    successfulBuildsHistoryLimit: 6
+    triggers:
+    - github:
+        secret: web1521187461070
+      type: GitHub
+    - generic:
+        secret: web1521187461070
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 文明网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: civilizationweb
+    name: civilizationweb
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/civilizationweb:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 凝聚网
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: coacervationweb
+    name: coacervationweb
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/coacervationweb:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 电梯安全风险监管系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: elevatorsf
+    name: elevatorsf
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/elevatorsf:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 档案管理系统
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: filemanagement
+    name: filemanagement
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/filemanagement:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 财政局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: financeweb
+    name: financeweb
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/financeweb:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 地理共享服务平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: geographyshare
+    name: geographyshare
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/geographyshare:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 政府采购网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: governmentpch
+    name: governmentpch
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/governmentpch:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 信息生活体验馆
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: infospace
+    name: infospace
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/infospace:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上生活服务中心平台
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: lifecenter
+    name: lifecenter
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/lifecenter:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 网上政务中心
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: onlinegovernmenthall
+    name: onlinegovernmenthall
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/onlinegovernmenthall:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 平安建设信息网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: safetyconstrt
+    name: safetyconstrt
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/safetyconstrt:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      m8cloud/displayName: 市场监督管理局网站
+      openshift.io/generated-by: m8cmp-web
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: supervisionweb
+    name: supervisionweb
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/cloud-demo/supervisionweb:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  data:
+    password: d2ZxOTIwOTA5
+    username: d3VmdXFpYW5n
+  kind: Secret
+  metadata:
+    creationTimestamp: null
+    name: wfqgit
+  type: kubernetes.io/basic-auth
+parameters:
+- description: "m8cmp-web源代码仓库地址"
+  displayName: Git Repository URL
+  name: SOURCE_REPOSITORY_URL
+  required: true
+  value: http://172.17.10.187/cmp/m8cmp-web.git
+- description: "可拉取m8cmp-web仓库地址权限的账号"
+  displayName: Git Username
+  name: USERNAME
+  required: true
+  value: wangpengcheng
+- description: "可拉取m8cmp-web仓库地址权限的密码"
+  displayName: Git Password
+  name: PASSWORD
+  required: true
+  value: wf929118fy
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com

@@ -1,0 +1,199 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    description: |-
+      m8hawkular-extend是M8Cloud极量云hawkular扩展模块，此模板通过镜像来部署m8hawkular-extend
+  name: m8hawkular-extend-images-deploy-template
+  namespace: openshift
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: m8hawkular-extend
+    name: m8hawkular-extend
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: m8hawkular-extend
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: m8hawkular-extend
+          deploymentconfig: m8hawkular-extend
+      spec:
+        containers:
+        - env:
+          - name: HAWKULAR_EXTEND_HTTPLISTEN
+            value: ${HAWKULAR_EXTEND_HTTPLISTEN}
+          - name: HAWKULAR_EXTEND_USERNAME
+            value: ${HAWKULAR_EXTEND_USERNAME}
+          - name: HAWKULAR_EXTEND_PASSWORD
+            value: ${HAWKULAR_EXTEND_PASSWORD}
+          - name: HAWKULAR_EXTEND_SMTPHOST
+            value: ${HAWKULAR_EXTEND_SMTPHOST}
+          - name: HAWKULAR_EXTEND_EMAILTEMPLATEFILE
+            value: ${HAWKULAR_EXTEND_EMAILTEMPLATEFILE}
+          - name: HAWKULAR_EXTEND_HAWKULARURL
+            value: ${HAWKULAR_EXTEND_HAWKULARURL}
+          - name: HAWKULAR_EXTEND_CASSANDRACLUSTERHOSTS
+            value: ${HAWKULAR_EXTEND_CASSANDRACLUSTERHOSTS}
+          - name: HAWKULAR_EXTEND_KEYSPACE
+            value: ${HAWKULAR_EXTEND_KEYSPACE}
+          - name: HAWKULAR_EXTEND_CERTPATH
+            value: ${HAWKULAR_EXTEND_CERTPATH}
+          - name: HAWKULAR_EXTEND_SMTPPORT
+            value: ${HAWKULAR_EXTEND_SMTPPORT}
+          image: ${M8HAWKULAR_EXTEND_IMAGES_REGISTRY_URL}
+          imagePullPolicy: Always
+          name: m8hawkular-extend
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 512m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /cert/
+            name: hawkular-metrics-certs
+          - mountPath: /email/
+            name: volume-emailtemplate
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          region: infra
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: emailtemplate
+          name: volume-emailtemplate
+        - name: hawkular-metrics-certs
+          secret:
+            defaultMode: 420
+            secretName: hawkular-metrics-certs
+    test: false
+    triggers:
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: m8hawkular-extend
+    name: m8hawkular-extend
+  spec:
+    ports:
+    - name: ${HAWKULAR_EXTEND_HTTPLISTEN}-tcp
+      port: ${HAWKULAR_EXTEND_HTTPLISTEN}
+      protocol: TCP
+      targetPort: 9999
+    selector:
+      deploymentconfig: m8hawkular-extend
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: m8hawkular-extend
+    name: m8hawkular-extend
+  spec:
+    host: m8hawkular-extend.${SUBDOMAIN}
+    port:
+      targetPort: ${HAWKULAR_EXTEND_HTTPLISTEN}-tcp
+    to:
+      kind: Service
+      name: m8hawkular-extend
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: v1
+  data:
+    EmailTemplate.txt: "{{if (eq .status \"RESOLVED\")}}\r\n<div> 【解决方法】</div>\r\n<div>解决人员：{{GetResolvedUser
+      .lifecycle}}</div>\r\n<div>解决时间：{{GetResolvedTime .lifecycle}}</div>\r\n<div>解决备注：{{GetResolvedNote
+      .notes}}</div>\r\n<div> 【报警数据】</div>\r\n{{end}}\r\n<div>报警应用：{{.trigger.description}}</div>\r\n<div>报警时间：{{Time
+      .ctime}}</div>\r\n<div>报警级别：{{if (eq .severity \"MEDIUM\")}}一般{{else if eq .severity
+      \"HIGH\"}}重要{{else if eq .severity \"CRITICAL\"}}严重{{end}}</div>\r\n<div>报警原因：{{$formData:=
+      Base64StrToJson .tags.Base64SaveDataForm}}连续{{$formData.dampeningValue}}个采样值满足
+      {{Base64Encode .tags.RuleTranslate}}</div>\r\n<div>采样方法：每{{range $formData.rules}}{{.durationValve}}分>钟数据的{{if
+      (eq .avgValue \"avg\")}}平均值{{else if (eq .avgValue \"max\")}}最大值{{else if (eq
+      .avgValue \"min\")}}最小值{{else if (eq .avgValue \"sum\")}}总和{{end}}{{end}}</div>\r\n<div>采样数据：{{$Metric:=.tags.Metric}}[{{range
+      .evalSets}}{{range .}} {{GetExpressValue .event.text $Metric}}{{end}}{{end}}]</div>"
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: m8hawkular-extend
+    name: emailtemplate
+parameters:
+- description: "容器里面的监听端口"
+  displayName: HAWKULAR_EXTEND_HTTPLISTEN
+  name: HAWKULAR_EXTEND_HTTPLISTEN
+  value: '9999'
+- description: "邮件用户名"
+  displayName: HAWKULAR_EXTEND_USERNAME
+  name: HAWKULAR_EXTEND_USERNAME
+  value: '455709273@qq.com'
+- description: "用户名密码"
+  displayName: HAWKULAR_EXTEND_PASSWORD
+  name: HAWKULAR_EXTEND_PASSWORD
+  value: 'jcbcculchxbnbjgh'
+- description: "SMTP服务器"
+  displayName: HAWKULAR_EXTEND_SMTPHOST
+  name: HAWKULAR_EXTEND_SMTPHOST
+  value: 'smtp.qq.cn'
+- description: "SMTP端口"
+  displayName: HAWKULAR_EXTEND_SMTPPORT
+  name: HAWKULAR_EXTEND_SMTPPORT
+  value: '465'
+- description: "hawkular 路由地址"
+  displayName: HAWKULAR_EXTEND_HAWKULARURL
+  name: HAWKULAR_EXTEND_HAWKULARURL
+  value: 'https://hawkular-metrics.csg.com/hawkular/'
+- description: "cassandra 集群service地址"
+  displayName: HAWKULAR_EXTEND_CASSANDRACLUSTERHOSTS
+  name: HAWKULAR_EXTEND_CASSANDRACLUSTERHOSTS
+  value: 'hawkular-cassandra.m8alert.svc'
+- description: "caddandra 表"
+  displayName: HAWKULAR_EXTEND_KEYSPACE
+  name: HAWKULAR_EXTEND_KEYSPACE
+  value: 'hawkular_alert_extend'
+- description: "证书存放目录"
+  displayName: HAWKULAR_EXTEND_CERTPATH
+  name: HAWKULAR_EXTEND_CERTPATH
+  value: '/cert/'
+- description: "邮件模板文件(注意是文件)"
+  displayName: HAWKULAR_EXTEND_EMAILTEMPLATEFILE
+  name: HAWKULAR_EXTEND_EMAILTEMPLATEFILE
+  value: '/email/EmailTemplate.txt'
+- description: "每个节点session连接池数"
+  displayName: HAWKULAR_EXTEND_CASSANDRANUMCONN
+  name: HAWKULAR_EXTEND_CASSANDRANUMCONN
+  value: '3'
+- description: "m8hawkular-extend 镜像仓库地址"
+  displayName: m8hawkular-extend images registry url
+  name: M8HAWKULAR_EXTEND_IMAGES_REGISTRY_URL
+  required: true
+  value: dockerhub.csg.com:5000/m8cloud/m8hawkular-extend:latest
+- description: "m8cloud子域名"
+  displayName: subdomain
+  name: SUBDOMAIN
+  required: true
+  value: test.com
